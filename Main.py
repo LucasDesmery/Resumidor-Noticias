@@ -1,6 +1,5 @@
 import os
 from functools import partial
-import feedparser
 import streamlit as st
 import newspaper
 from newspaper import Config
@@ -38,7 +37,6 @@ def get_titles(theme):
         if st.button(item.title):
             # Si el botón es presionado, descargar y mostrar el artículo
             articulo = newspaper.Article(item.link,config=config)
-            gn_feed = feedparser.parse("https://news.google.com/rss/search?q="+ f"{tema}" +"&hl=es-AR&gl=AR&ceid=AR:es")
             decoded_url = gnewsdecoder(articulo.url, interval=2)
             hashable_data = tuple(decoded_url.items())
             articulo = newspaper.Article(hashable_data.__getitem__(1)[1], config=config)
