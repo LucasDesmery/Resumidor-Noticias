@@ -1,5 +1,7 @@
 import os
 from functools import partial
+
+import openai
 import streamlit as st
 import newspaper
 from newspaper import Config
@@ -28,6 +30,22 @@ article = Article(base_url, config=config)
 article.download()
 article.parse()
 article.nlp()
+
+def get_answer(link):
+    Pregunta = "¿Cuál es la capital de Francia?"
+
+    # Hacer la solicitud al modelo
+    respuesta = openai.ChatCompletion.create(
+        model="gpt-4",  # Puedes usar "gpt-3.5-turbo" o "gpt-4"
+        messages=[
+            {"role": "system", "content": "Eres un asistente útil."},
+            {"role": "user", "content": Pregunta}
+        ]
+    )
+
+    # Extraer y mostrar la respuesta
+    print(respuesta['choices'][0]['message']['content'])
+
 def get_titles(theme):
     global articulos
     search = gn.search(theme)
@@ -50,6 +68,9 @@ def get_titles(theme):
 
 st.title("Noticias")
 tema = st.text_input('Selecciona un tema', placeholder='Escribe el tema del que quieres ver noticias')
-
+st.title("Pone un link de una noticia con una pregunta de titulo y se te respondera")
+pregunta = st.text_input('Escribe un link', placeholder='?')
 if tema:
     get_titles(tema)
+if pregunta:
+    get_answer(pregunta)
